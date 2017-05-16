@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="BuisnessProcess.View.ShowOrder"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BuisnessProcess.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel Margin="10">
+            <Label Content="Официант: " VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBlock Text="{Binding Table.WaiterName}" VerticalAlignment="Center"></TextBlock>
+        </DockPanel>
+        <ListView ItemsSource="{Binding Table.Order}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Margin="10"
+                  FontSize="14" Grid.Row="1" BorderBrush="Transparent">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="10">
+                        <DockPanel>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="5"></TextBlock>
+                            <TextBlock Text=" - " VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Text="{Binding Price}" VerticalAlignment="Center" Margin="5"></TextBlock>
+                            <TextBlock Text="р." VerticalAlignment="Center"></TextBlock>
+                        </DockPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

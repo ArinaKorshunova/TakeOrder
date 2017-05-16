@@ -1,0 +1,107 @@
+﻿<Window x:Class="BuisnessProcess.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BuisnessProcess.View"
+        xmlns:viewmodel="clr-namespace:BuisnessProcess.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d"
+        Title="" Height="auto" MaxHeight="700" Width="800">
+
+    <Window.DataContext>
+        <viewmodel:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.ColumnSpan="3" >
+            <TextBlock Text="{Binding CurrentData}" FontSize="16" Padding="5" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Text="Выручка за день: " FontSize="16" Margin="15,5,0,5"  Padding="5" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Text="{Binding DaySumm}"  FontSize="16" Padding="5" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Text="р."  Padding="5" FontSize="16" VerticalAlignment="Center"></TextBlock>
+        </DockPanel>
+        
+
+        <ListBox ItemsSource="{Binding Tables, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  FontSize="14" Grid.Row="1" BorderBrush="Transparent">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedTableCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Background" >
+                                            <Setter.Value>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FF293629" Offset="0.017"/>
+                                                    <GradientStop Color="#FF5EAE5A" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsFree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                        <Setter Property="Background" >
+                                            <Setter.Value>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FF4B3232" Offset="0"/>
+                                                    <GradientStop Color="#FFD84848" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding Name}" Margin="5"></TextBlock>
+                            <DockPanel>
+                                <Label Content="Текущий счет: " VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding TotalPrice, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="5"></TextBlock>
+                            </DockPanel>
+                            <DockPanel>
+                                <Button Margin="5" Padding="5" Visibility="{Binding MakeOrder, UpdateSourceTrigger=PropertyChanged}" Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                AncestorType={x:Type Window}}, Path=DataContext.MakeOrderCommand}" CommandParameter="{Binding Number}" Background="#FFE0F1CC" Content="Сделать заказ"/>
+                                <Button Margin="5" Padding="5" Visibility="{Binding CloseOrder, UpdateSourceTrigger=PropertyChanged}" Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                AncestorType={x:Type Window}}, Path=DataContext.CloseOrderCommand}" CommandParameter="{Binding Number}" Background="#FFAC6D6D" Content="Рассчитать клиента"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GridSplitter HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch" 
+                  Grid.Column="1" Grid.Row="2" ResizeBehavior="PreviousAndNext"
+                  Width="2" Background="#423535" Height="Auto" />
+
+        <Grid Grid.Row="1" Grid.Column="2" Visibility="{Binding AddOrderVisibility}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <local:AddOrder DataContext="{Binding AddOrderVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button Content="Сохранить заказ" Padding="5" VerticalAlignment="Bottom" Margin="10" Command="{Binding SaveOrderCommand}"></Button>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="2" Visibility="{Binding ShowOrderVisibility}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <local:ShowOrder DataContext="{Binding ShowOrderVM}"/>
+        </Grid>
+        
+    </Grid>
+</Window>
